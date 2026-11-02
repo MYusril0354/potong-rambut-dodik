@@ -7,7 +7,7 @@ export const POST: APIRoute = async (ctx) => {
   const body = await ctx.request.json().catch(() => ({}));
   if (isClosedDay()) return json({ ok: false, error: 'Hari ini tutup. Booking tidak tersedia.' }, 423);
 
-  const repo = getRepo(getEnv(ctx));
+  const repo = await getRepo(getEnv(ctx));
   const r = await repo.book(
     reqDate(ctx.url),
     Number(body.number),

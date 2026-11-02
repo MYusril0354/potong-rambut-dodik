@@ -5,6 +5,6 @@ import { getEnv, json, reqDate, requireAdmin } from '../../../lib/server/http';
 export const GET: APIRoute = async (ctx) => {
   const denied = await requireAdmin(ctx);
   if (denied) return denied;
-  const repo = getRepo(getEnv(ctx));
+  const repo = await getRepo(getEnv(ctx));
   return json({ ok: true, bookings: await repo.list(reqDate(ctx.url)) });
 };

@@ -274,10 +274,56 @@ export function d1Storage(db: any): Storage {
   };
 }
 
+// ---------- D1 schema auto-init (idempoten, jalan sekali per isolate saat deploy) ----------
+const SCHEMA_STATEMENTS = [
+  `CREATE TABLE IF NOT EXISTS bookings (
+    id TEXT PRIMARY KEY,
+    date TEXT NOT NULL,
+    number INTEGER NOT NULL,
+    slot_time TEXT NOT NULL,
+    customer_name TEXT NOT NULL,
+    customer_phone TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'booked',
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    wa_last_notified_at TEXT,
+    UNIQUE(date, number)
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_bookings_date_status ON bookings(date, status)`,
+  `CREATE INDEX IF NOT EXISTS idx_bookings_phone_date ON bookings(customer_phone, date)`,
+  `CREATE TABLE IF NOT EXISTS queue_state (
+    date TEXT PRIMARY KEY,
+    currently_serving INTEGER NOT NULL DEFAULT 0,
+    updated_at TEXT NOT NULL
+  )`,
+];
+
+const schemaPromises = new WeakMap<object, Promise<void>>();
+
+function ensureSchema(db: any): Promise<void> {
+  let p = schemaPromises.get(db);
+  if (!p) {
+    p = (async () => {
+      for (const sql of SCHEMA_STATEMENTS) {
+        await db.prepare(sql).run();
+      }
+    })().catch((e) => {
+      schemaPromises.delete(db);
+      throw e;
+    });
+    schemaPromises.set(db, p);
+  }
+  return p;
+}
+
 // ---------- factory ----------
-export function getRepo(env: any): Repo {
+export async function getRepo(env: any): Promise<Repo> {
   const db = env?.DB;
   const isProd = typeof (import.meta as any)?.env?.PROD === 'boolean' ? (import.meta as any).env.PROD : false;
   const useD1 = isProd && db && typeof db.prepare === 'function';
-  return createRepo(useD1 ? d1Storage(db) : memoryStorage);
+  if (useD1) {
+    await ensureSchema(db);
+    return createRepo(d1Storage(db));
+  }
+  return createRepo(memoryStorage);
 }

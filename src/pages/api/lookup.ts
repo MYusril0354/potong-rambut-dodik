@@ -4,7 +4,7 @@ import { getEnv, json, reqDate } from '../../lib/server/http';
 
 export const POST: APIRoute = async (ctx) => {
   const body = await ctx.request.json().catch(() => ({}));
-  const repo = getRepo(getEnv(ctx));
+  const repo = await getRepo(getEnv(ctx));
   const booking = await repo.lookup(reqDate(ctx.url), String(body.phone ?? ''));
   if (!booking) return json({ ok: false, error: 'Booking tidak ditemukan.' }, 404);
   return json({ ok: true, booking });
