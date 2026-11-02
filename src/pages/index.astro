@@ -1,0 +1,258 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import LiveQueue from '../components/react/LiveQueue';
+import site from '../data/site.json';
+import faq from '../data/faq.json';
+export const prerender = true;
+
+const waUrl = `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(site.whatsappCta)}`;
+const mapsUrl = site.mapsEmbedUrl || `https://www.google.com/maps/search/${encodeURIComponent(site.mapsFallbackQuery)}`;
+---
+
+<BaseLayout>
+  <Header />
+
+  <main id="landing">
+    <!-- 1. HERO -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-content">
+          <span class="eyebrow">{site.locality} · {site.region}</span>
+          <h1>Antrian jujur, datang <em>tepat waktu</em>.</h1>
+          <p class="lead">
+            Booking nomor antrian di {site.name} dari HP Anda. Tanpa daftar akun,
+            tanpa menunggu berjam-jam di kursi tunggu. {site.serviceName} {site.priceLabel}.
+          </p>
+          <div class="hero-actions">
+            <a href="/book" class="btn btn-primary">Book Now</a>
+            <a href="/status" class="btn btn-outline">Lihat Antrian</a>
+          </div>
+          <p class="hero-note">⏱️ {site.durationLabel} per pelanggan · Satu kursi, satu barber.</p>
+        </div>
+        <div class="hero-visual">
+          <img
+            src={site.heroImage}
+            alt={`${site.barberName}, pemilik dan barber ${site.name} ${site.locality}`}
+            loading="eager"
+          />
+          <div class="hero-badge">
+            <strong>{site.priceLabel}</strong>
+            {site.serviceName} · {site.durationLabel}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. CARA BOOKING -->
+    <section class="section" id="cara">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Cara Booking</span>
+          <h2>Tiga langkah, selesai</h2>
+          <p>Dari HP ke kursi barber tanpa ribet.</p>
+        </div>
+        <div class="how-grid">
+          <div class="how-card">
+            <span class="num">1</span>
+            <div class="icon">🔢</div>
+            <h3>Pilih nomor</h3>
+            <p>Pilih nomor antrian yang tersedia. Nomor kecil = jam lebih awal.</p>
+          </div>
+          <div class="how-card">
+            <span class="num">2</span>
+            <div class="icon">📝</div>
+            <h3>Isi data</h3>
+            <p>Cukup nama dan nomor HP. Tanpa daftar akun, tanpa password.</p>
+          </div>
+          <div class="how-card">
+            <span class="num">3</span>
+            <div class="icon">⏰</div>
+            <h3>Datang tepat waktu</h3>
+            <p>Pantau status dari HP. Datang saat nomor Anda hampir dipanggil.</p>
+          </div>
+        </div>
+        <p class="how-helper">Rata-rata selesai dalam 30 detik.</p>
+      </div>
+    </section>
+
+    <!-- 3. LAYANAN + BARBER -->
+    <section class="section" id="layanan" style="background: var(--surface);">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Layanan</span>
+          <h2>Satu kursi, satu layanan, tanpa basa-basi</h2>
+        </div>
+        <div class="focus-grid">
+          <article class="focus-card">
+            <div class="icon">✂️</div>
+            <h3>{site.serviceName}</h3>
+            <div class="meta"><span>{site.durationLabel}</span><span>·</span><span>Konsultasi singkat</span></div>
+            <div class="price">{site.priceLabel}</div>
+            <p class="desc">{site.serviceDescription}</p>
+            <a href="/book" class="btn btn-primary btn-sm">Pilih Nomor</a>
+          </article>
+          <article class="focus-card">
+            <div class="stylist-avatar">
+              <img
+                src={site.barberPhoto}
+                alt={`${site.barberName}, pemilik dan barber ${site.name} ${site.locality}`}
+                loading="lazy"
+              />
+            </div>
+            <h3>{site.barberName}</h3>
+            <div class="meta"><span>{site.barberRole}</span><span>·</span><span>Berpengalaman</span></div>
+            <p class="desc">{site.barberDescription}</p>
+            <a href="/book" class="btn btn-outline btn-sm">Book dengan {site.barberName}</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. KENAPA BOOKING ONLINE -->
+    <section class="section" id="kenapa">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">Kenapa Booking Online?</span>
+          <h2>Bukan karena tren. Karena lebih baik untuk Anda.</h2>
+        </div>
+        <div class="benefits-grid">
+          <div class="benefit-card">
+            <div class="benefit-icon">🕐</div>
+            <h3>Tidak perlu menunggu lama</h3>
+            <p>Datang sesuai giliran, bukan duduk berjam-jam di kursi tunggu.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">📱</div>
+            <h3>Tanpa daftar akun</h3>
+            <p>Cukup nama dan nomor HP. Langsung jadi, tanpa password.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">🎯</div>
+            <h3>Estimasi jujur</h3>
+            <p>Sistem memberi tahu kapan harus datang, bukan janji palsu.</p>
+          </div>
+          <div class="benefit-card">
+            <div class="benefit-icon">💵</div>
+            <h3>Harga tetap</h3>
+            <p>{site.priceLabel}, tanpa biaya tambahan atau biaya tersembunyi.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. LIVE QUEUE -->
+    <section class="section" id="live" style="padding-top: 0;">
+      <div class="container">
+        <LiveQueue client:load />
+      </div>
+    </section>
+
+    <!-- 6. JAM OPERASIONAL -->
+    <section class="section" id="jam">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Jam Operasional</span>
+          <h2>Kapan {site.name} buka?</h2>
+        </div>
+        <div class="closed-banner" id="closed-today" hidden>
+          Tutup hari ini. Silakan datang kembali di hari buka.
+        </div>
+        <div class="hours-card">
+          <div class="hours-row" data-day="1,2,3,4">
+            <span>{site.hours[0].days}</span>
+            <span>{site.hours[0].open}–{site.hours[0].close}</span>
+          </div>
+          <div class="hours-row" data-day="5">
+            <span>{site.hours[1].days}</span>
+            <span class="closed">Tutup</span>
+          </div>
+          <div class="hours-row" data-day="6">
+            <span>{site.hours[2].days}</span>
+            <span>{site.hours[2].open}–{site.hours[2].close}</span>
+          </div>
+          <div class="hours-row" data-day="0">
+            <span>{site.hours[3].days}</span>
+            <span class="closed">Tutup</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. LOKASI & KONTAK -->
+    <section class="section" id="lokasi" style="background: var(--surface);">
+      <div class="container location-grid">
+        <div style={site.mapsEmbedUrl ? '' : 'display:none'}>
+          <div class="map-wrap">
+            {site.mapsEmbedUrl && (
+              <iframe
+                src={site.mapsEmbedUrl}
+                title={`Peta lokasi ${site.name}`}
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+            )}
+          </div>
+        </div>
+        <div class="contact-stack">
+          <div>
+            <span class="eyebrow">Lokasi & Kontak</span>
+            <h2>Di mana kami?</h2>
+          </div>
+          <p class="addr">{site.address}</p>
+          <a class="btn btn-wa" href={waUrl} target="_blank" rel="noopener noreferrer">
+            💬 Chat {site.barberName} via WhatsApp
+          </a>
+          <a class="btn btn-outline" href={mapsUrl} target="_blank" rel="noopener noreferrer">
+            📍 Buka di Google Maps
+          </a>
+          <div>
+            <p style="font-weight: 600; margin-bottom: 0.4rem;">Area Layanan</p>
+            <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 0.75rem;">
+              Melayani pelanggan dari {site.areaServed.join(', ')}, dan sekitarnya.
+            </p>
+            <div class="area-list">
+              {site.areaServed.map((a) => <span class="area-chip">{a}</span>)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. FAQ -->
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-head center">
+          <span class="eyebrow">FAQ</span>
+          <h2>Pertanyaan yang sering ditanyakan</h2>
+        </div>
+        <div class="faq" style="margin-inline: auto;">
+          {faq.map((f) => (
+            <details>
+              <summary>{f.q}</summary>
+              <p class="faq-a">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+
+  <script is:inline>
+    // Today-highlight for hours table (WIB)
+    (function () {
+      var d = new Date(new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' }) + 'T00:00:00').getDay();
+      document.querySelectorAll('.hours-row[data-day]').forEach(function (r) {
+        var days = (r.getAttribute('data-day') || '').split(',').map(Number);
+        if (days.indexOf(d) !== -1) r.classList.add('today');
+      });
+      if (d === 5 || d === 0) {
+        var b = document.getElementById('closed-today');
+        if (b) b.hidden = false;
+      }
+    })();
+  </script>
+</BaseLayout>

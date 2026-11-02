@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BookingWizard from '../components/react/BookingWizard';
+import site from '../data/site.json';
+export const prerender = true;
+---
+
+<BaseLayout
+  title={`Book Now — ${site.name} ${site.locality}`}
+  description={`Booking nomor antrian online di ${site.name} ${site.locality}. Pilih nomor, isi nama & HP, datang sesuai giliran.`}
+>
+  <Header />
+  <main>
+    <section class="section">
+      <div class="container">
+        <BookingWizard client:load />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import site from '../data/site.json';
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+---
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="/" class="logo">
+      {site.name.split(' ').slice(0, 2).join(' ')} <span>{site.name.split(' ').pop()}</span>
+      <small>{site.locality}</small>
+    </a>
+    <nav class="nav-links" aria-label="Navigasi utama">
+      <a href="/" class:list={['nav-link', { active: path === '/' }]}>Beranda</a>
+      <a href="/status" class:list={['nav-link', { active: path === '/status' }]}>Status</a>
+      <a href="/book" class="btn btn-primary btn-sm">Book Now</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const header = document.querySelector('.site-header');
+  const onScroll = () => header?.classList.toggle('scrolled', window.scrollY > 8);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+</script>

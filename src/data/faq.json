@@ -1,0 +1,42 @@
+[
+  {
+    "q": "Berapa harga potong rambut di sini?",
+    "a": "Rp 13.000, bayar tunai di tempat. Tidak ada biaya tambahan."
+  },
+  {
+    "q": "Apakah harus booking dulu, atau bisa langsung datang?",
+    "a": "Bisa langsung datang, tapi booking online lebih aman agar tidak menunggu lama. Nomor bisa penuh terutama akhir pekan."
+  },
+  {
+    "q": "Berapa lama waktu pengerjaan?",
+    "a": "Rata-rata 15 menit per pelanggan, tergantung model rambut."
+  },
+  {
+    "q": "Bisa bayar non-tunai / QRIS?",
+    "a": "Saat ini hanya menerima pembayaran tunai."
+  },
+  {
+    "q": "Kalau saya tidak datang saat nomor dipanggil, apa yang terjadi?",
+    "a": "Nomor Anda akan dilewati oleh admin. Silakan booking ulang atau hubungi Pak Dodik langsung."
+  },
+  {
+    "q": "Apakah hari Jumat buka?",
+    "a": "Tidak. Pangkas Rambut Dodik tutup setiap hari Jumat. Buka Senin–Kamis 06:30–17:00 dan Sabtu 06:30–17:30."
+  },
+  {
+    "q": "Apakah bisa untuk anak-anak?",
+    "a": "Ya, bisa."
+  },
+  {
+    "q": "Bagaimana cara membatalkan booking?",
+    "a": "Buka halaman Status, cek via nomor HP, lalu klik Batalkan Booking. Pembatalan hanya bisa dilakukan sebelum nomor Anda dipanggil."
+  },
+  {
+    "q": "Apakah bisa booking untuk besok atau hari lain?",
+    "a": "Saat ini hanya untuk hari yang sama. Nomor dibuka setiap hari mulai pagi."
+  },
+  {
+    "q": "Di mana lokasinya persisnya?",
+    "a": "Pandaan, Kabupaten Pasuruan. Lihat peta di atas untuk navigasi."
+  }
+]

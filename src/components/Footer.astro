@@ -1,0 +1,38 @@
+---
+import site from '../data/site.json';
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div>
+        <h4>{site.name}</h4>
+        <p style="color: var(--muted); font-size: 0.9rem;">
+          {site.serviceName} {site.priceLabel} · {site.durationLabel}<br />
+          {site.fullLocation}
+        </p>
+      </div>
+      <div>
+        <h4>Jam Operasional</h4>
+        <ul>
+          {site.hours.map((h) => (
+            <li>{h.closed ? `${h.days}: Tutup` : `${h.days}: ${h.open}–${h.close}`}</li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h4>Area Layanan</h4>
+        <div class="area-list">
+          {site.areaServed.map((a) => <span class="area-chip">{a}</span>)}
+        </div>
+        <p style="color: var(--muted); font-size: 0.85rem; margin-top: 1rem;">
+          <a href="/admin">Login Admin</a>
+        </p>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© {new Date().getFullYear()} {site.name}. Semua hak dilindungi.</span>
+      <span>{site.locality} · {site.region}</span>
+    </div>
+  </div>
+</footer>

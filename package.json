@@ -1,0 +1,29 @@
+{
+  "name": "pangkas-dodik",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check:data": "node scripts/check-data.mjs",
+    "deploy": "npm run check:data && npm run build && wrangler deploy",
+    "d1:create": "wrangler d1 create pangkas-dodik-db",
+    "d1:migrate": "wrangler d1 migrations apply pangkas-dodik-db --remote",
+    "d1:migrate:local": "wrangler d1 migrations apply pangkas-dodik-db --local"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.4.4",
+    "@astrojs/react": "^7.1.2",
+    "astro": "^7.4.4",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "wrangler": "^4.156.1"
+  }
+}

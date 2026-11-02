@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StatusPanel from '../components/react/StatusPanel';
+import site from '../data/site.json';
+export const prerender = true;
+---
+
+<BaseLayout
+  title={`Status Antrian — ${site.name} ${site.locality}`}
+  description={`Cek status nomor antrian Anda di ${site.name} ${site.locality}. Pantau giliran dari HP, tanpa perlu menunggu di tempat.`}
+>
+  <Header />
+  <main>
+    <section class="section">
+      <div class="container">
+        <StatusPanel client:load />
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,11 @@
+name = "pangkas-dodik"
+compatibility_date = "2026-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pangkas-dodik-db"
+database_id = "REPLACE_WITH_D1_ID"
+
+[vars]
+PUBLIC_SITE_URL = "https://pangkas-dodik.example"

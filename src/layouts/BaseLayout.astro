@@ -1,0 +1,102 @@
+---
+import site from '../data/site.json';
+import faq from '../data/faq.json';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  robots?: string;
+}
+
+const {
+  title = `${site.name} ${site.locality} — Booking Nomor Antrian Online`,
+  description = `${site.name}, ${site.locality}. Booking nomor antrian online tanpa perlu menunggu lama. ${site.serviceName} ${site.priceLabel}.`,
+  robots,
+} = Astro.props;
+
+const canonical = Astro.site
+  ? new URL(Astro.url.pathname, Astro.site).toString()
+  : undefined;
+
+const hairSalon = {
+  '@context': 'https://schema.org',
+  '@type': 'HairSalon',
+  name: site.name,
+  description: `${site.name} di ${site.locality} dengan sistem booking nomor antrian online. Satu kursi, satu barber berpengalaman.`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.locality,
+    addressRegion: site.region,
+    addressCountry: site.country,
+  },
+  areaServed: site.areaServed.map((c) => ({ '@type': 'City', name: c })),
+  openingHoursSpecification: [
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '06:30', closes: '17:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Friday', opens: '00:00', closes: '00:00' },
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '06:30', closes: '17:30' },
+  ],
+  priceRange: site.priceLabel,
+  currenciesAccepted: 'IDR',
+  paymentAccepted: 'Cash',
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Layanan',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: { '@type': 'Service', name: site.serviceName, description: site.serviceDescription },
+        price: String(site.price),
+        priceCurrency: 'IDR',
+      },
+    ],
+  },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const hairSalonJson = JSON.stringify(hairSalon);
+const faqJson = JSON.stringify(faqSchema);
+---
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="keywords" content={site.keywords} />
+    {robots && <meta name="robots" content={robots} />}
+    <meta name="theme-color" content="#F7F3ED" />
+    <meta name="geo.region" content="ID-JI" />
+    <meta name="geo.placename" content={site.locality} />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    {canonical && <meta property="og:url" content={canonical} />}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="application/ld+json" set:html={hairSalonJson} />
+    <script type="application/ld+json" set:html={faqJson} />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

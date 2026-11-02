@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdminPanel from '../components/react/AdminPanel';
+import site from '../data/site.json';
+export const prerender = true;
+---
+
+<BaseLayout
+  title={`Admin — ${site.name} ${site.locality}`}
+  description="Panel admin untuk mengelola antrian."
+  robots="noindex, nofollow"
+>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="/" class="logo">
+        {site.name}<small>Panel Admin</small>
+      </a>
+      <a href="/" class="nav-link">← Beranda</a>
+    </div>
+  </header>
+  <main>
+    <section class="section">
+      <div class="container">
+        <AdminPanel client:load />
+      </div>
+    </section>
+  </main>
+</BaseLayout>
