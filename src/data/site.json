@@ -5,7 +5,7 @@
   "country": "ID",
   "fullLocation": "Pandaan, Kabupaten Pasuruan",
   "address": "Pandaan, Kabupaten Pasuruan",
-  "whatsapp": "62XXXXXXXXXX",
+  "whatsapp": "628123456789",
   "whatsappCta": "Halo Pak Dodik, saya mau tanya soal booking antrian",
   "mapsEmbedUrl": "",
   "mapsFallbackQuery": "Pangkas Rambut Dodik Pandaan",
@@ -25,7 +25,7 @@
     { "days": "Senin – Kamis", "open": "06:30", "close": "17:00", "closed": false },
     { "days": "Jumat", "closed": true },
     { "days": "Sabtu", "open": "06:30", "close": "17:30", "closed": false },
-    { "days": "Minggu", "closed": true }
+    { "days": "Minggu", "open": "06:30", "close": "17:30", "closed": false }
   ],
   "totalNumbers": 40,
   "slotMinutes": 15,
