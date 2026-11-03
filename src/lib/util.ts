@@ -62,6 +62,14 @@ export const PILL: Record<string, string> = {
   cancelled: 'pill cancelled',
 };
 
+export const STATUS_LABEL: Record<string, string> = {
+  booked: 'Dipesan',
+  serving: 'Dilayani',
+  done: 'Selesai',
+  skipped: 'Dilewati',
+  cancelled: 'Dibatalkan',
+};
+
 // ---------- timezone (WIB) ----------
 export function todayWIB(): string {
   return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jakarta' });

@@ -93,7 +93,7 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
             <label htmlFor="bookPhone">Nomor HP (terdaftar WhatsApp)</label>
             <input id="bookPhone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0812…" inputMode="tel" autoComplete="tel" />
             <div className="wa-warn">
-              ⚠️ Wajib nomor yang aktif WhatsApp — pengingat & info giliran dikirim lewat WhatsApp.
+              ⚠️ Wajib nomer Whatsapp yang aktif untuk memudahkan pengingat giliran dan nanti akan dikirim lewat WhatsApp
             </div>
           </div>
           {turnstileSiteKey && (

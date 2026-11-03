@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import site from '../../data/site.json';
-import { CONFIG, effectiveStatus, firstName, PILL, type Booking, type QueueInfo } from '../../lib/util';
+import { CONFIG, effectiveStatus, firstName, PILL, STATUS_LABEL, type Booking, type QueueInfo } from '../../lib/util';
 import { apiCancel, apiLookup, fetchQueue, getMyBooking, setMyBooking } from '../../lib/api';
 import NumGrid from './NumGrid';
 import QueueTicket from './QueueTicket';
@@ -99,7 +99,7 @@ export default function StatusPanel() {
             {firstName(myBooking.customer_name)} · {myBooking.slot_time} · {site.priceLabel}
           </p>
           <p style={{ textAlign: 'center', marginBottom: '0.5rem' }}>
-            <span className={PILL[effectiveStatus(myBooking, q)]}>{effectiveStatus(myBooking, q)}</span>
+            <span className={PILL[effectiveStatus(myBooking, q)]}>{STATUS_LABEL[effectiveStatus(myBooking, q)] ?? effectiveStatus(myBooking, q)}</span>
           </p>
           {effectiveStatus(myBooking, q) === 'booked' && (
             <div className="wizard-actions">

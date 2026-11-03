@@ -28,11 +28,11 @@ export default function LiveQueue() {
     <div className="live-card">
       <div>
         <h3>
-          <span className="pulse-dot" aria-hidden="true" /> Live dari kursi Dodik
+          <span className="pulse-dot" aria-hidden="true" /> Langsung dari kursi Dodik
         </h3>
         <p>
           {q?.is_closed
-            ? 'Hari ini tutup. Booking dibuka kembali besok.'
+            ? 'Hari ini tutup. Antrian dibuka kembali besok.'
             : 'Status antrian diperbarui otomatis.'}
         </p>
       </div>

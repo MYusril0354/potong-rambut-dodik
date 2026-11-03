@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CONFIG, PILL, buildWaUrl, effectiveStatus, waTemplate, type Booking, type QueueInfo } from '../../lib/util';
+import { CONFIG, PILL, STATUS_LABEL, buildWaUrl, effectiveStatus, waTemplate, type Booking, type QueueInfo } from '../../lib/util';
 import {
   apiAdminDemoFill,
   apiAdminList,
@@ -301,7 +301,7 @@ export default function AdminPanel() {
                           <div className="aname">{b.customer_name}</div>
                           <div className="asub">{b.slot_time} · {b.customer_phone}</div>
                         </div>
-                        <span className={PILL[st]}>{st}</span>
+                        <span className={PILL[st]}>{STATUS_LABEL[st] ?? st}</span>
                         <div className="fu-cell">
                           <button
                             className={notified ? 'wa-mini fu-done' : 'wa-mini'}
