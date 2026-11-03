@@ -2,7 +2,8 @@ interface Props {
   className?: string;
 }
 
-// Gunting dengan animasi SMIL (membuka-menutup loop) — disediakan pengguna.
+// Gunting dengan animasi SMIL (membuka-menutup loop) + mask untuk
+// celah pemisah bilah yang transparan (background tembus lewat celahnya).
 export default function ScissorsIcon({ className }: Props) {
   return (
     <svg className={className} viewBox="0 0 430 435" aria-hidden="true">
@@ -17,34 +18,39 @@ export default function ScissorsIcon({ className }: Props) {
           <path d="M108,240 L128,212 Q150,205 175,205 L230,205 L232,238 L150,255 Z" />
           <path transform="rotate(-28 62 250)" fillRule="evenodd" d="M7,250 a55,42 0 1,0 110,0 a55,42 0 1,0 -110,0 Z M32,252 a30,20 0 1,0 60,0 a30,20 0 1,0 -60,0 Z" />
         </g>
+        <mask id="sepMask">
+          <rect x="0" y="0" width="430" height="435" fill="#fff" />
+          <use xlinkHref="#partA" fill="none" stroke="#000" strokeWidth="30" strokeLinejoin="round" />
+        </mask>
       </defs>
 
-      <g>
-        <animateTransform
-          attributeName="transform"
-          type="rotate"
-          dur="1.4s"
-          repeatCount="indefinite"
-          calcMode="spline"
-          keyTimes="0;0.1;0.35;0.4;0.8;1"
-          values="0 213 213;0 213 213;-15 213 213;-15 213 213;0 213 213;0 213 213"
-          keySplines="0 0 1 1;0.5 0 0.9 0.5;0 0 1 1;0.3 0 0.3 1;0 0 1 1"
-        />
-        <use xlinkHref="#partB" fill="#000" />
-      </g>
-
-      <g>
-        <animateTransform
-          attributeName="transform"
-          type="rotate"
-          dur="1.4s"
-          repeatCount="indefinite"
-          calcMode="spline"
-          keyTimes="0;0.1;0.35;0.4;0.8;1"
-          values="0 213 213;0 213 213;15 213 213;15 213 213;0 213 213;0 213 213"
-          keySplines="0 0 1 1;0.5 0 0.9 0.5;0 0 1 1;0.3 0 0.3 1;0 0 1 1"
-        />
-        <use xlinkHref="#partA" fill="#000" />
+      <g mask="url(#sepMask)">
+        <g>
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            dur="1.4s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.1;0.35;0.4;0.8;1"
+            values="0 213 213;0 213 213;-15 213 213;-15 213 213;0 213 213;0 213 213"
+            keySplines="0 0 1 1;0.5 0 0.9 0.5;0 0 1 1;0.3 0 0.3 1;0 0 1 1"
+          />
+          <use xlinkHref="#partB" fill="#000" />
+        </g>
+        <g>
+          <animateTransform
+            attributeName="transform"
+            type="rotate"
+            dur="1.4s"
+            repeatCount="indefinite"
+            calcMode="spline"
+            keyTimes="0;0.1;0.35;0.4;0.8;1"
+            values="0 213 213;0 213 213;15 213 213;15 213 213;0 213 213;0 213 213"
+            keySplines="0 0 1 1;0.5 0 0.9 0.5;0 0 1 1;0.3 0 0.3 1;0 0 1 1"
+          />
+          <use xlinkHref="#partA" fill="#000" />
+        </g>
       </g>
 
       <rect x="204" y="204" width="18" height="18" fill="#fff" transform="rotate(15 213 213)" />
