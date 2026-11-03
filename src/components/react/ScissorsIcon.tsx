@@ -44,7 +44,6 @@ export default function ScissorsIcon({ className }: Props) {
           values="0 213 213;0 213 213;15 213 213;15 213 213;0 213 213;0 213 213"
           keySplines="0 0 1 1;0.5 0 0.9 0.5;0 0 1 1;0.3 0 0.3 1;0 0 1 1"
         />
-        <use xlinkHref="#partA" fill="none" stroke="#fff" strokeWidth="30" strokeLinejoin="round" />
         <use xlinkHref="#partA" fill="#000" />
       </g>
 
