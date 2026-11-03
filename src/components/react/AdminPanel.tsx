@@ -85,15 +85,27 @@ export default function AdminPanel() {
   const doNext = async () => {
     const r = await apiAdminNext().catch(() => ({ ok: false, error: 'Gagal terhubung ke server.' }));
     await refresh();
-    if (r.ok && r.next != null && autoWa) {
+    let remindedNumber: number | undefined;
+    if (r.ok && autoWa && r.next != null) {
       const updated = await apiAdminList().catch(() => ({ ok: false } as const));
-      const b = (updated.ok ? updated.bookings : []).find((x) => x.number === r.next);
-      if (b && q) {
-        const url = buildWaUrl(b.customer_phone, waTemplate(b, q, 'serving'));
-        if (url) window.open(url, '_blank', 'noopener,noreferrer');
+      const bookings = updated.ok ? updated.bookings || [] : [];
+      const nextUp = bookings
+        .filter((b) => b.status === 'booked' && b.number > r.next!)
+        .sort((a, b) => a.number - b.number)[0];
+      if (nextUp) {
+        const qq = await fetchQueue().catch(() => null);
+        const url = qq ? buildWaUrl(nextUp.customer_phone, waTemplate(nextUp, qq, 'booked')) : null;
+        if (url) {
+          window.open(url, '_blank', 'noopener,noreferrer');
+          remindedNumber = nextUp.number;
+        }
       }
     }
-    flash(r.ok ? `Memanggil nomor berikutnya (#${r.next ?? '—'}).` : r.error || 'Tidak ada nomor berikutnya.');
+    flash(
+      r.ok
+        ? `Memanggil nomor #${r.next ?? '—'}${remindedNumber ? ` · pengingat dikirim ke #${remindedNumber}` : ''}.`
+        : r.error || 'Tidak ada nomor berikutnya.'
+    );
   };
 
   const doSkip = async () => {
@@ -235,7 +247,7 @@ export default function AdminPanel() {
               </div>
               <label className="checkbox-row">
                 <input type="checkbox" checked={autoWa} onChange={(e) => setAutoWa(e.target.checked)} />
-                Kirim WA juga ke pelanggan saat panggil berikutnya
+                Kirim WA pengingat ke antrian berikutnya
               </label>
             </div>
 
