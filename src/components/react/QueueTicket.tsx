@@ -1,0 +1,28 @@
+interface Props {
+  number: number | null;
+  remaining?: number;
+  closed?: boolean;
+}
+
+export default function QueueTicket({ number, remaining, closed }: Props) {
+  return (
+    <div className="queue-ticket">
+      <div className="ticket-stub" aria-hidden="true" />
+      <div className="ticket-body">
+        {closed ? (
+          <div className="ticket-closed">Tutup Hari Ini</div>
+        ) : (
+          <>
+            <div className="ticket-label">Sedang Dilayani</div>
+            <div className="ticket-number">{number && number > 0 ? `#${number}` : '—'}</div>
+            {typeof remaining === 'number' && (
+              <div className="ticket-sub">
+                Tersisa <b>{remaining}</b> nomor
+              </div>
+            )}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}

@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 import site from '../../data/site.json';
-import { CONFIG, slotTime, type QueueInfo } from '../../lib/util';
+import { slotTime, type QueueInfo } from '../../lib/util';
 import { apiBook, fetchQueue } from '../../lib/api';
 import TurnstileWidget from './TurnstileWidget';
-
-type NumStatus = 'available' | 'booked' | 'serving' | 'done' | 'skipped';
+import NumGrid from './NumGrid';
 
 export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
   const [step, setStep] = useState(1);
@@ -21,15 +20,6 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
   }, []);
 
   const closed = q?.is_closed ?? false;
-
-  const statusOf = (n: number): NumStatus => {
-    if (!q) return 'available';
-    if (q.serving === n) return 'serving';
-    if (q.done.includes(n)) return 'done';
-    if (q.skipped.includes(n)) return 'skipped';
-    if (q.booked.includes(n)) return 'booked';
-    return 'available';
-  };
 
   if (closed) {
     return (
@@ -72,28 +62,9 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
         <div className="step-panel">
           <h2>1. Pilih Nomor</h2>
           <p style={{ color: 'var(--muted)', margin: '0.5rem 0 1.25rem' }}>
-            Nomor kecil = jam lebih awal. {CONFIG.totalNumbers} nomor tersedia per hari.
+            Nomor kecil = jam lebih awal. {q.total_numbers} nomor tersedia per hari.
           </p>
-          <div className="num-grid">
-            {Array.from({ length: CONFIG.totalNumbers }, (_, i) => i + 1).map((n) => {
-              const st = statusOf(n);
-              const isSelected = selected === n;
-              const clickable = st === 'available' || isSelected;
-              return (
-                <button
-                  key={n}
-                  type="button"
-                  className={`num-btn ${st !== 'available' ? st : ''} ${isSelected ? 'selected' : ''}`}
-                  disabled={!clickable}
-                  onClick={() => setSelected(isSelected ? null : n)}
-                  aria-pressed={isSelected}
-                >
-                  {n}
-                  <small>{slotTime(n)}</small>
-                </button>
-              );
-            })}
-          </div>
+          <NumGrid q={q} selectable selected={selected} onSelect={setSelected} />
           <div className="wizard-actions">
             <span />
             <button className="btn btn-primary" disabled={selected == null} onClick={() => setStep(2)}>

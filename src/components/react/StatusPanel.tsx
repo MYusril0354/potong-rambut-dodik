@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import site from '../../data/site.json';
 import { CONFIG, effectiveStatus, firstName, PILL, type Booking, type QueueInfo } from '../../lib/util';
 import { apiCancel, apiLookup, fetchQueue, getMyBooking, setMyBooking } from '../../lib/api';
+import NumGrid from './NumGrid';
+import QueueTicket from './QueueTicket';
 
 function statusMessage(b: Booking, q: QueueInfo): { text: string; cls: string } {
   const st = effectiveStatus(b, q);
@@ -109,15 +111,10 @@ export default function StatusPanel() {
         </div>
       ) : (
         <>
-          <div className="live-card" style={{ marginBottom: '1.5rem' }}>
-            <div>
-              <h3><span className="pulse-dot" aria-hidden="true" /> Sedang dilayani</h3>
-              <p>{q.currently_serving > 0 ? `Nomor #${q.currently_serving}` : 'Belum ada yang dipanggil hari ini'}</p>
-            </div>
-            <div className="live-number">
-              <div className="label">Tersisa</div>
-              <div className="value muted">{q.remaining}</div>
-            </div>
+          <QueueTicket number={q.currently_serving} remaining={q.remaining} />
+
+          <div style={{ marginBottom: '1.25rem' }}>
+            <NumGrid q={q} />
           </div>
 
           <div className="wizard">
