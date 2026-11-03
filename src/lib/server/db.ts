@@ -74,7 +74,7 @@ export function createRepo(storage: Storage): Repo {
       const nameClean = name.trim();
       const phone = phoneRaw.replace(/\D/g, '');
       if (!nameClean) return { ok: false, error: 'Nama tidak boleh kosong.' };
-      if (phone.length < 8) return { ok: false, error: 'Nomor HP minimal 8 digit.' };
+      if (phone.length < 9) return { ok: false, error: 'Nomor HP tidak valid. Gunakan nomor HP aktif WhatsApp (minimal 9 digit).' };
 
       const list = await storage.getBookings(date);
       if (list.some((b) => b.customer_phone === phone && b.status !== 'cancelled')) {

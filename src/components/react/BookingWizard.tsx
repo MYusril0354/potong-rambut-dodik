@@ -35,6 +35,11 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
   const submit = () => {
     setError(null);
     if (selected == null) return;
+    const phoneDigits = phone.replace(/\D/g, '');
+    if (phoneDigits.length < 9 || phoneDigits.length > 13) {
+      setError('Nomor HP tidak valid. Gunakan nomor HP aktif WhatsApp (contoh: 0812xxxxxxxx).');
+      return;
+    }
     if (turnstileSiteKey && !turnstileToken) {
       setError('Selesaikan dulu verifikasi keamanan (captcha).');
       setStep(2);
@@ -85,9 +90,11 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
             <input id="bookName" value={name} onChange={(e) => setName(e.target.value)} placeholder="Contoh: Bagus Setiawan" autoComplete="name" />
           </div>
           <div className="form-field">
-            <label htmlFor="bookPhone">Nomor HP</label>
+            <label htmlFor="bookPhone">Nomor HP (terdaftar WhatsApp)</label>
             <input id="bookPhone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0812…" inputMode="tel" autoComplete="tel" />
-            <div className="hint">Tanpa daftar akun. Hanya untuk info giliran.</div>
+            <div className="wa-warn">
+              ⚠️ Wajib nomor yang aktif WhatsApp — pengingat & info giliran dikirim lewat WhatsApp.
+            </div>
           </div>
           {turnstileSiteKey && (
             <div className="form-field">
