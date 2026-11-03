@@ -5,6 +5,7 @@ import Footer from '../components/Footer.astro';
 import BookingWizard from '../components/react/BookingWizard';
 import site from '../data/site.json';
 export const prerender = true;
+const turnstileSiteKey = (import.meta as any).env?.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
 ---
 
 <BaseLayout
@@ -15,7 +16,7 @@ export const prerender = true;
   <main>
     <section class="section">
       <div class="container">
-        <BookingWizard client:load />
+        <BookingWizard client:load turnstileSiteKey={turnstileSiteKey} />
       </div>
     </section>
   </main>

@@ -17,6 +17,15 @@ export function reqDate(url: URL): string {
   return url.searchParams.get('date') || todayWIB();
 }
 
+export function getClientIp(ctx: any): string {
+  return (
+    ctx?.clientAddress ||
+    ctx?.request?.headers?.get('cf-connecting-ip') ||
+    ctx?.request?.headers?.get('x-forwarded-for') ||
+    'unknown'
+  );
+}
+
 export async function requireAdmin(ctx: any): Promise<Response | null> {
   if (!(await isAuthed(ctx.request, getEnv(ctx)))) {
     return json({ ok: false, error: 'Tidak terautorisasi.' }, 401);

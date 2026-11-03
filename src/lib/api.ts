@@ -18,8 +18,11 @@ export function fetchQueue(): Promise<QueueInfo> {
   return jfetch('/api/queue');
 }
 
-export function apiBook(number: number, name: string, phone: string): Promise<BookResult> {
-  return jfetch('/api/book', { method: 'POST', body: JSON.stringify({ number, name, phone }) });
+export function apiBook(number: number, name: string, phone: string, turnstileToken?: string | null): Promise<BookResult> {
+  return jfetch('/api/book', {
+    method: 'POST',
+    body: JSON.stringify({ number, name, phone, turnstile_token: turnstileToken ?? '' }),
+  });
 }
 
 export function apiCancel(number: number, phone: string): Promise<{ ok: boolean; error?: string }> {

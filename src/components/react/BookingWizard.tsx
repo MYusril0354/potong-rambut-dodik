@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import site from '../../data/site.json';
 import { CONFIG, slotTime, isClosedDay, type QueueInfo } from '../../lib/util';
 import { apiBook, fetchQueue } from '../../lib/api';
+import TurnstileWidget from './TurnstileWidget';
 
 type NumStatus = 'available' | 'booked' | 'serving' | 'done' | 'skipped';
 
-export default function BookingWizard() {
+export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?: string }) {
   const [step, setStep] = useState(1);
   const [selected, setSelected] = useState<number | null>(null);
   const [name, setName] = useState('');
@@ -13,6 +14,7 @@ export default function BookingWizard() {
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const [q, setQ] = useState<QueueInfo | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
 
   useEffect(() => {
     fetchQueue().then(setQ).catch(() => setQ(null));
@@ -43,7 +45,12 @@ export default function BookingWizard() {
   const submit = () => {
     setError(null);
     if (selected == null) return;
-    apiBook(selected, name, phone).then((r) => {
+    if (turnstileSiteKey && !turnstileToken) {
+      setError('Selesaikan dulu verifikasi keamanan (captcha).');
+      setStep(2);
+      return;
+    }
+    apiBook(selected, name, phone, turnstileToken).then((r) => {
       if (r.ok) {
         setDone(true);
         window.location.href = '/status';
@@ -111,6 +118,11 @@ export default function BookingWizard() {
             <input id="bookPhone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="0812…" inputMode="tel" autoComplete="tel" />
             <div className="hint">Tanpa daftar akun. Hanya untuk info giliran.</div>
           </div>
+          {turnstileSiteKey && (
+            <div className="form-field">
+              <TurnstileWidget siteKey={turnstileSiteKey} onToken={setTurnstileToken} />
+            </div>
+          )}
           {error && <p className="form-error">{error}</p>}
           <div className="wizard-actions">
             <button className="btn btn-outline" onClick={() => setStep(1)}>Kembali</button>
