@@ -10,6 +10,8 @@ import { getSettings, isClosedToday } from '../lib/server/settings';
 export const prerender = false;
 
 const settings = await getSettings();
+// Cache landing 60 dtk di edge Cloudflare (admin settings tampil maksimal ±1 menit)
+Astro.response.headers.set('Cache-Control', 'public, max-age=60, s-maxage=60, stale-while-revalidate=60');
 const todayNum = currentDayWIB();
 const closedToday = isClosedToday(settings);
 
