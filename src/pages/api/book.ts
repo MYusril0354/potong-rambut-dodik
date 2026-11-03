@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getRepo } from '../../lib/server/db';
 import { getEnv, json, reqDate } from '../../lib/server/http';
 import { verifyTurnstile } from '../../lib/server/turnstile';
-import { getSettings, isClosedToday } from '../../lib/server/settings';
+import { computeSlotTimes, getSettings, isClosedToday } from '../../lib/server/settings';
 
 export const POST: APIRoute = async (ctx) => {
   const body = await ctx.request.json().catch(() => ({}));
@@ -14,13 +14,19 @@ export const POST: APIRoute = async (ctx) => {
   const turnstileOk = await verifyTurnstile(env, String(body.turnstile_token ?? ''));
   if (!turnstileOk) return json({ ok: false, error: 'Verifikasi captcha gagal. Silakan coba lagi.' }, 400);
 
+  const number = Number(body.number);
+  const slotTimes = computeSlotTimes(settings);
+  const slot_time = number >= 1 && number <= slotTimes.length ? slotTimes[number - 1] : '';
+
   const repo = await getRepo(env);
   const r = await repo.book(
     reqDate(ctx.url),
-    Number(body.number),
+    number,
     String(body.name ?? ''),
     String(body.phone ?? ''),
-    closed
+    closed,
+    settings.totalNumbers,
+    slot_time
   );
   if (!r.ok) return json({ ok: false, error: r.error }, 409);
   return json({ ok: true, booking: r.booking, number: r.booking!.number, slot_time: r.booking!.slot_time }, 201);

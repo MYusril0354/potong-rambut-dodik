@@ -39,6 +39,7 @@ export interface QueueInfo {
   done: number[];
   skipped: number[];
   remaining: number;
+  slot_times?: string[];
 }
 
 export interface BookResult {

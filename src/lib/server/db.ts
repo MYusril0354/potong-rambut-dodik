@@ -14,8 +14,8 @@ export interface Storage {
 
 // ---------- business logic (shared) ----------
 export interface Repo {
-  getQueue(date: string, closed?: boolean): Promise<QueueInfo>;
-  book(date: string, number: number, name: string, phone: string, closed?: boolean): Promise<BookResult>;
+  getQueue(date: string, closed?: boolean, totalNumbers?: number): Promise<QueueInfo>;
+  book(date: string, number: number, name: string, phone: string, closed?: boolean, totalNumbers?: number, slot_time?: string): Promise<BookResult>;
   cancel(date: string, number: number, phone: string): Promise<{ ok: boolean; error?: string }>;
   lookup(date: string, phone: string): Promise<Booking | null>;
   list(date: string): Promise<Booking[]>;
@@ -45,7 +45,7 @@ export function createRepo(storage: Storage): Repo {
   };
 
   return {
-    async getQueue(date, closed = false) {
+    async getQueue(date, closed = false, totalNumbers = CONFIG.totalNumbers) {
       const st = await stateOf(date);
       const list = await storage.getBookings(date);
       const serving = list.find((b) => b.number === st.currently_serving && (b.status === 'serving' || b.status === 'booked'));
@@ -57,19 +57,19 @@ export function createRepo(storage: Storage): Repo {
         date,
         currently_serving: st.currently_serving,
         is_closed: closed,
-        total_numbers: CONFIG.totalNumbers,
+        total_numbers: totalNumbers,
         booked,
         serving: serving ? serving.number : null,
         done,
         skipped,
-        remaining: Math.max(0, CONFIG.totalNumbers - new Set(taken).size),
+        remaining: Math.max(0, totalNumbers - new Set(taken).size),
       };
     },
 
-    async book(date, number, name, phoneRaw, closed = false) {
+    async book(date, number, name, phoneRaw, closed = false, totalNumbers = CONFIG.totalNumbers, slot_time = slotTime(number)) {
       if (closed) return { ok: false, error: 'Hari ini tutup. Booking tidak tersedia.' };
-      if (!Number.isInteger(number) || number < 1 || number > CONFIG.totalNumbers) {
-        return { ok: false, error: 'Nomor antrian tidak valid (1–' + CONFIG.totalNumbers + ').' };
+      if (!Number.isInteger(number) || number < 1 || number > totalNumbers) {
+        return { ok: false, error: 'Nomor antrian tidak valid (1–' + totalNumbers + ').' };
       }
       const nameClean = name.trim();
       const phone = phoneRaw.replace(/\D/g, '');
@@ -89,7 +89,7 @@ export function createRepo(storage: Storage): Repo {
         id: crypto.randomUUID(),
         date,
         number,
-        slot_time: slotTime(number),
+        slot_time,
         customer_name: nameClean,
         customer_phone: phone,
         status: 'booked',

@@ -32,6 +32,9 @@ export default function AdminPanel() {
   const [tab, setTab] = useState<'antrian' | 'pengaturan'>('antrian');
   const [hours, setHours] = useState<SettingsInfo['hours']>([]);
   const [price, setPrice] = useState<number>(0);
+  const [totalNumbers, setTotalNumbers] = useState<number>(40);
+  const [breakStart, setBreakStart] = useState('');
+  const [breakEnd, setBreakEnd] = useState('');
   const [saving, setSaving] = useState<string | null>(null);
 
   const flash = (m: string) => {
@@ -55,6 +58,9 @@ export default function AdminPanel() {
       setSettings(st);
       setHours(st.hours || []);
       setPrice(st.price);
+      setTotalNumbers(st.totalNumbers || 40);
+      setBreakStart(st.breakStart || '');
+      setBreakEnd(st.breakEnd || '');
     }
   };
 
@@ -159,6 +165,30 @@ export default function AdminPanel() {
       flash(`Harga disimpan (${r.settings.priceLabel}).`);
     } else {
       flash('Gagal menyimpan harga.');
+    }
+  };
+
+  const saveTotalNumbers = async () => {
+    setSaving('total');
+    const r = await apiSaveSettings({ totalNumbers }).catch(() => null);
+    setSaving(null);
+    if (r?.ok) {
+      setSettings(r.settings);
+      flash('Total nomor disimpan.');
+    } else {
+      flash('Gagal menyimpan total nomor.');
+    }
+  };
+
+  const saveBreak = async () => {
+    setSaving('break');
+    const r = await apiSaveSettings({ breakStart, breakEnd }).catch(() => null);
+    setSaving(null);
+    if (r?.ok) {
+      setSettings(r.settings);
+      flash('Jam istirahat disimpan.');
+    } else {
+      flash('Gagal menyimpan jam istirahat.');
     }
   };
 
@@ -331,6 +361,31 @@ export default function AdminPanel() {
                   {saving === 'harga' ? 'Menyimpan…' : 'Simpan Harga'}
                 </button>
                 <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Sekarang: {settings?.priceLabel}</span>
+              </div>
+            </div>
+
+            <div className="admin-card">
+              <h3 style={{ marginBottom: '0.5rem' }}>Total Nomor per Hari</h3>
+              <div className="settings-row">
+                <input type="number" value={totalNumbers} min={1} max={200} onChange={(e) => setTotalNumbers(Number(e.target.value) || 40)} />
+                <button className="btn btn-outline btn-sm" onClick={saveTotalNumbers} disabled={saving === 'total'}>
+                  {saving === 'total' ? 'Menyimpan…' : 'Simpan Total Nomor'}
+                </button>
+              </div>
+            </div>
+
+            <div className="admin-card">
+              <h3 style={{ marginBottom: '0.25rem' }}>Jam Istirahat</h3>
+              <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '0.75rem' }}>
+                Kosongkan jam jika tidak ada istirahat.
+              </p>
+              <div className="settings-row">
+                <input type="time" value={breakStart} onChange={(e) => setBreakStart(e.target.value)} />
+                <span>–</span>
+                <input type="time" value={breakEnd} onChange={(e) => setBreakEnd(e.target.value)} />
+                <button className="btn btn-outline btn-sm" onClick={saveBreak} disabled={saving === 'break'}>
+                  {saving === 'break' ? 'Menyimpan…' : 'Simpan Istirahat'}
+                </button>
               </div>
             </div>
 

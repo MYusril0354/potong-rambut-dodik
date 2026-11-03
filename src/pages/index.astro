@@ -217,6 +217,9 @@ const faqJson = JSON.stringify(faqSchema);
             </div>
           ))}
         </div>
+        {settings.breakStart && settings.breakEnd && (
+          <p class="how-helper">☕ Jam istirahat: {settings.breakStart}–{settings.breakEnd}</p>
+        )}
       </div>
     </section>
 

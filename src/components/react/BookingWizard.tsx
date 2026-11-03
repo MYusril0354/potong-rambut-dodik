@@ -78,7 +78,7 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
         <div className="step-panel">
           <h2>2. Isi Data</h2>
           <p style={{ color: 'var(--muted)', margin: '0.5rem 0 1.25rem' }}>
-            Nomor terpilih: <b>#{selected} · {slotTime(selected ?? 1)}</b>
+            Nomor terpilih: <b>#{selected} · {q.slot_times?.[(selected ?? 1) - 1] ?? slotTime(selected ?? 1)}</b>
           </p>
           <div className="form-field">
             <label htmlFor="bookName">Nama lengkap</label>
@@ -107,7 +107,7 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
           <h2>3. Konfirmasi</h2>
           <div className="summary" style={{ marginTop: '0.75rem' }}>
             <div className="summary-row"><span>Nomor antrian</span><b>#{selected}</b></div>
-            <div className="summary-row"><span>Perkiraan jam</span><b>{slotTime(selected ?? 1)}</b></div>
+            <div className="summary-row"><span>Perkiraan jam</span><b>{q.slot_times?.[(selected ?? 1) - 1] ?? slotTime(selected ?? 1)}</b></div>
             <div className="summary-row"><span>Layanan</span><b>{site.serviceName} · {site.priceLabel}</b></div>
             <div className="summary-row"><span>Nama</span><b>{name}</b></div>
             <div className="summary-row"><span>HP</span><b>{phone}</b></div>

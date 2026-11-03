@@ -68,6 +68,9 @@ export interface SettingsInfo {
   price: number;
   priceLabel: string;
   temporarilyClosed: boolean;
+  totalNumbers: number;
+  breakStart: string;
+  breakEnd: string;
   is_closed_today?: boolean;
 }
 export function apiGetSettings(): Promise<SettingsInfo> {

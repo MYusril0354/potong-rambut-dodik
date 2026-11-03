@@ -43,7 +43,7 @@ export default function NumGrid({ q, selectable = false, selected = null, onSele
             ) : (
               <>
                 {n}
-                <small>{slotTime(n)}</small>
+                <small>{q.slot_times?.[n - 1] ?? slotTime(n)}</small>
               </>
             )}
           </button>
