@@ -1,6 +1,5 @@
 ---
 import site from '../data/site.json';
-import faq from '../data/faq.json';
 import '../styles/global.css';
 
 interface Props {
@@ -18,53 +17,6 @@ const {
 const canonical = Astro.site
   ? new URL(Astro.url.pathname, Astro.site).toString()
   : undefined;
-
-const hairSalon = {
-  '@context': 'https://schema.org',
-  '@type': 'HairSalon',
-  name: site.name,
-  description: `${site.name} di ${site.locality} dengan sistem booking nomor antrian online. Satu kursi, satu barber berpengalaman.`,
-  address: {
-    '@type': 'PostalAddress',
-    addressLocality: site.locality,
-    addressRegion: site.region,
-    addressCountry: site.country,
-  },
-  areaServed: site.areaServed.map((c) => ({ '@type': 'City', name: c })),
-  openingHoursSpecification: [
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday'], opens: '06:30', closes: '17:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Friday', opens: '00:00', closes: '00:00' },
-    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '06:30', closes: '17:30' },
-  ],
-  priceRange: site.priceLabel,
-  currenciesAccepted: 'IDR',
-  paymentAccepted: 'Cash',
-  hasOfferCatalog: {
-    '@type': 'OfferCatalog',
-    name: 'Layanan',
-    itemListElement: [
-      {
-        '@type': 'Offer',
-        itemOffered: { '@type': 'Service', name: site.serviceName, description: site.serviceDescription },
-        price: String(site.price),
-        priceCurrency: 'IDR',
-      },
-    ],
-  },
-};
-
-const faqSchema = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faq.map((f) => ({
-    '@type': 'Question',
-    name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
-  })),
-};
-
-const hairSalonJson = JSON.stringify(hairSalon);
-const faqJson = JSON.stringify(faqSchema);
 ---
 
 <!DOCTYPE html>
@@ -93,8 +45,6 @@ const faqJson = JSON.stringify(faqSchema);
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
       rel="stylesheet"
     />
-    <script type="application/ld+json" set:html={hairSalonJson} />
-    <script type="application/ld+json" set:html={faqJson} />
   </head>
   <body>
     <slot />

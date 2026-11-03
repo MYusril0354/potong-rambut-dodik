@@ -1,7 +1,7 @@
 // Server data layer — one set of business rules, two backends:
 //   D1 (production, Cloudflare) and in-memory (local dev / fallback).
 import type { Booking, BookingStatus, BookResult, QueueInfo, QueueState } from '../util';
-import { CONFIG, isClosedDay, slotTime } from '../util';
+import { CONFIG, slotTime } from '../util';
 
 // ---------- low-level storage interface ----------
 export interface Storage {
@@ -14,8 +14,8 @@ export interface Storage {
 
 // ---------- business logic (shared) ----------
 export interface Repo {
-  getQueue(date: string): Promise<QueueInfo>;
-  book(date: string, number: number, name: string, phone: string): Promise<BookResult>;
+  getQueue(date: string, closed?: boolean): Promise<QueueInfo>;
+  book(date: string, number: number, name: string, phone: string, closed?: boolean): Promise<BookResult>;
   cancel(date: string, number: number, phone: string): Promise<{ ok: boolean; error?: string }>;
   lookup(date: string, phone: string): Promise<Booking | null>;
   list(date: string): Promise<Booking[]>;
@@ -23,6 +23,7 @@ export interface Repo {
   skip(date: string): Promise<{ ok: boolean; skipped?: number }>;
   reset(date: string): Promise<{ ok: boolean }>;
   demoFill(date: string): Promise<{ ok: boolean }>;
+  notify(id: string): Promise<{ ok: boolean }>;
 }
 
 export function createRepo(storage: Storage): Repo {
@@ -44,7 +45,7 @@ export function createRepo(storage: Storage): Repo {
   };
 
   return {
-    async getQueue(date) {
+    async getQueue(date, closed = false) {
       const st = await stateOf(date);
       const list = await storage.getBookings(date);
       const serving = list.find((b) => b.number === st.currently_serving && (b.status === 'serving' || b.status === 'booked'));
@@ -55,7 +56,7 @@ export function createRepo(storage: Storage): Repo {
       return {
         date,
         currently_serving: st.currently_serving,
-        is_closed: isClosedDay(),
+        is_closed: closed,
         total_numbers: CONFIG.totalNumbers,
         booked,
         serving: serving ? serving.number : null,
@@ -65,8 +66,8 @@ export function createRepo(storage: Storage): Repo {
       };
     },
 
-    async book(date, number, name, phoneRaw) {
-      if (isClosedDay()) return { ok: false, error: 'Hari ini tutup. Booking tidak tersedia.' };
+    async book(date, number, name, phoneRaw, closed = false) {
+      if (closed) return { ok: false, error: 'Hari ini tutup. Booking tidak tersedia.' };
       if (!Number.isInteger(number) || number < 1 || number > CONFIG.totalNumbers) {
         return { ok: false, error: 'Nomor antrian tidak valid (1–' + CONFIG.totalNumbers + ').' };
       }
@@ -120,6 +121,11 @@ export function createRepo(storage: Storage): Repo {
     async list(date) {
       const list = await storage.getBookings(date);
       return list.sort((a, b) => a.number - b.number);
+    },
+
+    async notify(id) {
+      await storage.updateBooking(id, { wa_last_notified_at: new Date().toISOString() });
+      return { ok: true };
     },
 
     async next(date) {
@@ -295,6 +301,10 @@ const SCHEMA_STATEMENTS = [
     date TEXT PRIMARY KEY,
     currently_serving INTEGER NOT NULL DEFAULT 0,
     updated_at TEXT NOT NULL
+  )`,
+  `CREATE TABLE IF NOT EXISTS settings (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
   )`,
 ];
 

@@ -1,7 +1,7 @@
 [
   {
     "q": "Berapa harga potong rambut di sini?",
-    "a": "Rp 13.000, bayar tunai di tempat. Tidak ada biaya tambahan."
+    "a": "{priceLabel}, bayar tunai di tempat. Tidak ada biaya tambahan."
   },
   {
     "q": "Apakah harus booking dulu, atau bisa langsung datang?",
@@ -21,7 +21,7 @@
   },
   {
     "q": "Apakah hari Jumat buka?",
-    "a": "Tidak. Pangkas Rambut Dodik tutup setiap hari Jumat. Buka Senin–Kamis 06:30–17:00 dan Sabtu 06:30–17:30."
+    "a": "Jam operasional: {hoursText}."
   },
   {
     "q": "Apakah bisa untuk anak-anak?",

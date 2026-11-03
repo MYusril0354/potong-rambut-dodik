@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import site from '../../data/site.json';
-import { CONFIG, slotTime, isClosedDay, type QueueInfo } from '../../lib/util';
+import { CONFIG, slotTime, type QueueInfo } from '../../lib/util';
 import { apiBook, fetchQueue } from '../../lib/api';
 import TurnstileWidget from './TurnstileWidget';
 
@@ -20,7 +20,7 @@ export default function BookingWizard({ turnstileSiteKey }: { turnstileSiteKey?:
     fetchQueue().then(setQ).catch(() => setQ(null));
   }, []);
 
-  const closed = isClosedDay() || (q?.is_closed ?? false);
+  const closed = q?.is_closed ?? false;
 
   const statusOf = (n: number): NumStatus => {
     if (!q) return 'available';

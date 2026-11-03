@@ -68,10 +68,6 @@ export function todayWIB(): string {
 export function currentDayWIB(): number {
   return new Date(todayWIB() + 'T00:00:00').getDay(); // 0=Sun .. 6=Sat (Fri=5)
 }
-export function isClosedDay(): boolean {
-  const d = currentDayWIB();
-  return d === 5 || d === 0;
-}
 export function slotTime(n: number): string {
   const total = CONFIG.startHour * 60 + CONFIG.startMinute + (n - 1) * CONFIG.slotMinutes;
   const h = Math.floor(total / 60);

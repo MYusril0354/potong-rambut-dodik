@@ -7,17 +7,14 @@ import site from '../data/site.json';
     <div class="footer-grid">
       <div>
         <h4>{site.name}</h4>
-        <p style="color: var(--muted); font-size: 0.9rem;">
-          {site.serviceName} {site.priceLabel} · {site.durationLabel}<br />
-          {site.fullLocation}
-        </p>
+        <p style="color: var(--muted); font-size: 0.9rem;">{site.fullLocation}</p>
       </div>
       <div>
-        <h4>Jam Operasional</h4>
+        <h4>Navigasi</h4>
         <ul>
-          {site.hours.map((h) => (
-            <li>{h.closed ? `${h.days}: Tutup` : `${h.days}: ${h.open}–${h.close}`}</li>
-          ))}
+          <li><a href="/">Beranda</a></li>
+          <li><a href="/book">Book Now</a></li>
+          <li><a href="/status">Cek Status</a></li>
         </ul>
       </div>
       <div>

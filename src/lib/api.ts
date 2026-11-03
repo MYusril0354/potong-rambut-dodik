@@ -55,6 +55,31 @@ export function apiAdminDemoFill(): Promise<{ ok: boolean; error?: string }> {
   return jfetch('/api/admin/demo', { method: 'POST' });
 }
 
+// ---------- pengaturan & FU ----------
+export interface HoursEntry {
+  days: string;
+  dayNumbers: number[];
+  open?: string;
+  close?: string;
+  closed: boolean;
+}
+export interface SettingsInfo {
+  hours: HoursEntry[];
+  price: number;
+  priceLabel: string;
+  temporarilyClosed: boolean;
+  is_closed_today?: boolean;
+}
+export function apiGetSettings(): Promise<SettingsInfo> {
+  return jfetch('/api/settings');
+}
+export function apiSaveSettings(patch: Partial<SettingsInfo>): Promise<{ ok: boolean; error?: string; settings: SettingsInfo }> {
+  return jfetch('/api/admin/settings', { method: 'POST', body: JSON.stringify(patch) });
+}
+export function apiAdminNotify(id: string): Promise<{ ok: boolean; error?: string }> {
+  return jfetch('/api/admin/notify', { method: 'POST', body: JSON.stringify({ id }) });
+}
+
 // ---------- per-device "my booking" marker (client only) ----------
 const keyMyBooking = () => 'pd_mybooking_' + todayWIB();
 export function getMyBooking(): MyBooking | null {
