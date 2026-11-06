@@ -14,6 +14,7 @@ import {
   fetchQueue,
   type SettingsInfo,
 } from '../../lib/api';
+import QueueTicket from './QueueTicket';
 
 function fuTime(iso?: string): string {
   if (!iso) return '';
@@ -36,6 +37,7 @@ export default function AdminPanel() {
   const [breakStart, setBreakStart] = useState('');
   const [breakEnd, setBreakEnd] = useState('');
   const [saving, setSaving] = useState<string | null>(null);
+  const [confirm, setConfirm] = useState<{ message: string; action: () => void } | null>(null);
 
   const flash = (m: string) => {
     setNotice(m);
@@ -71,6 +73,8 @@ export default function AdminPanel() {
   const setHour = (i: number, patch: Partial<SettingsInfo['hours'][number]>) => {
     setHours((prev) => prev.map((h, j) => (j === i ? { ...h, ...patch } : h)));
   };
+
+  const askConfirm = (message: string, action: () => void) => setConfirm({ message, action });
 
   const doLogin = async () => {
     const r = await apiAdminLogin(pw).catch(() => ({ ok: false, error: 'Gagal terhubung ke server.' }));
@@ -121,7 +125,6 @@ export default function AdminPanel() {
   };
 
   const doReset = async () => {
-    if (!window.confirm('Reset hari ini? Semua booking hari ini akan dibatalkan.')) return;
     await apiAdminReset().catch(() => {});
     await refresh();
     flash('Hari ini direset.');
@@ -263,17 +266,14 @@ export default function AdminPanel() {
         {tab === 'antrian' && (
           <>
             <div className="admin-card">
-              <div style={{ marginBottom: '1rem' }}>
-                <div className="label" style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Sedang dilayani</div>
-                <div className="big">#{servingNumber ?? '—'}</div>
-                <div style={{ color: 'var(--muted)' }}>
-                  {servingBooking ? servingBooking.customer_name : 'Belum ada yang dipanggil hari ini'}
-                </div>
+              <QueueTicket number={servingNumber} />
+              <div className="serving-name">
+                {servingBooking ? servingBooking.customer_name : 'Belum ada yang dipanggil hari ini'}
               </div>
               <div className="admin-actions">
-                <button className="btn btn-accent" onClick={doNext}>Panggil Berikutnya</button>
-                <button className="btn btn-outline" onClick={doSkip}>Lewati Nomor Ini</button>
-                <button className="btn btn-danger" onClick={doReset}>Reset Hari Ini</button>
+                <button className="btn btn-accent" onClick={() => askConfirm('Yakin panggil nomor berikutnya?', doNext)}>Panggil Berikutnya</button>
+                <button className="btn btn-outline" onClick={() => askConfirm('Yakin lewati nomor ini?', doSkip)}>Lewati Nomor Ini</button>
+                <button className="btn btn-danger" onClick={() => askConfirm('Yakin reset hari ini? Semua booking akan dibatalkan.', doReset)}>Reset Hari Ini</button>
               </div>
               <label className="checkbox-row">
                 <input type="checkbox" checked={autoWa} onChange={(e) => setAutoWa(e.target.checked)} />
@@ -406,6 +406,28 @@ export default function AdminPanel() {
       <p style={{ color: 'var(--muted)', fontSize: '0.82rem', marginTop: '1.5rem', textAlign: 'center' }}>
         Data tersimpan di Cloudflare D1 (fallback in-memory saat dev lokal).
       </p>
+
+      {confirm && (
+        <div className="modal-overlay" onClick={() => setConfirm(null)}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <h3>Konfirmasi</h3>
+            <p>{confirm.message}</p>
+            <div className="modal-actions">
+              <button className="btn btn-outline" onClick={() => setConfirm(null)}>Tidak</button>
+              <button
+                className="btn btn-accent"
+                onClick={() => {
+                  const a = confirm.action;
+                  setConfirm(null);
+                  a();
+                }}
+              >
+                Ya
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

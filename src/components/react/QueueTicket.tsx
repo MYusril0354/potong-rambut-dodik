@@ -1,3 +1,5 @@
+import ScissorsIcon from './ScissorsIcon';
+
 interface Props {
   number: number | null;
   remaining?: number;
@@ -14,6 +16,7 @@ export default function QueueTicket({ number, remaining, closed }: Props) {
         ) : (
           <>
             <div className="ticket-label">Sedang Dilayani</div>
+            <ScissorsIcon className="ticket-scissors" />
             <div className="ticket-number">{number && number > 0 ? `#${number}` : '—'}</div>
             {typeof remaining === 'number' && (
               <div className="ticket-sub">
