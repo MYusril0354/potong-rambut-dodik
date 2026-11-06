@@ -5,7 +5,7 @@ compatibility_flags = ["nodejs_compat"]
 [[d1_databases]]
 binding = "DB"
 database_name = "pangkas-dodik-db"
-database_id = "REPLACE_WITH_D1_ID"
+database_id = "9eac766f-a785-4ef9-95c1-5c7edd5e3c30"
 
 [vars]
 PUBLIC_SITE_URL = "https://pangkas-dodik.example"
