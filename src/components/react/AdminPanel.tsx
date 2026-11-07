@@ -214,7 +214,9 @@ export default function AdminPanel() {
         <div className="wizard">
           <h2>Login Admin</h2>
           <p style={{ color: 'var(--muted)', margin: '0.5rem 0 1rem' }}>
-            Khusus untuk Pak Dodik. Demo password: <b>{CONFIG.demoAdminPassword}</b>
+            {(import.meta as any).env?.DEV
+              ? <>Demo password: <b>{CONFIG.demoAdminPassword}</b></>
+              : 'Masuk untuk mengelola antrian.'}
           </p>
           <div className="form-field">
             <label htmlFor="adminPass">Password</label>
