@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import LiveQueue from '../components/react/LiveQueue';
+import Icon from '../components/Icon.astro';
 import site from '../data/site.json';
 import faq from '../data/faq.json';
 import { currentDayWIB } from '../lib/util';
@@ -106,19 +107,19 @@ const faqJson = JSON.stringify(faqSchema);
         <div class="how-grid">
           <div class="how-card">
             <span class="num">1</span>
-            <div class="icon">🔢</div>
+            <span class="icon-badge"><Icon name="hash" /></span>
             <h3>Pilih nomor</h3>
             <p>Pilih nomor antrian yang tersedia. Nomor kecil = jam lebih awal.</p>
           </div>
           <div class="how-card">
             <span class="num">2</span>
-            <div class="icon">📝</div>
+            <span class="icon-badge"><Icon name="pencil" /></span>
             <h3>Isi data</h3>
             <p>Cukup nama dan nomor HP. Tanpa daftar akun, tanpa password.</p>
           </div>
           <div class="how-card">
             <span class="num">3</span>
-            <div class="icon">⏰</div>
+            <span class="icon-badge"><Icon name="clock" /></span>
             <h3>Datang tepat waktu</h3>
             <p>Pantau status dari HP. Datang saat nomor Anda hampir dipanggil.</p>
           </div>
@@ -136,7 +137,7 @@ const faqJson = JSON.stringify(faqSchema);
         </div>
         <div class="focus-grid">
           <article class="focus-card">
-            <div class="icon">✂️</div>
+            <span class="icon-badge"><Icon name="scissors" /></span>
             <h3>{site.serviceName}</h3>
             <div class="meta"><span>{site.durationLabel}</span><span>·</span><span>Konsultasi singkat</span></div>
             <div class="price">{settings.priceLabel}</div>
@@ -169,22 +170,22 @@ const faqJson = JSON.stringify(faqSchema);
         </div>
         <div class="benefits-grid">
           <div class="benefit-card">
-            <div class="benefit-icon">🕐</div>
+            <span class="icon-badge"><Icon name="hourglass" /></span>
             <h3>Tidak perlu menunggu lama</h3>
             <p>Datang sesuai giliran, bukan duduk berjam-jam di kursi tunggu.</p>
           </div>
           <div class="benefit-card">
-            <div class="benefit-icon">📱</div>
+            <span class="icon-badge"><Icon name="smartphone" /></span>
             <h3>Tanpa daftar akun</h3>
             <p>Cukup nama dan nomor HP. Langsung jadi, tanpa password.</p>
           </div>
           <div class="benefit-card">
-            <div class="benefit-icon">🎯</div>
+            <span class="icon-badge"><Icon name="target" /></span>
             <h3>Estimasi jujur</h3>
             <p>Sistem memberi tahu kapan harus datang, bukan janji palsu.</p>
           </div>
           <div class="benefit-card">
-            <div class="benefit-icon">💵</div>
+            <span class="icon-badge"><Icon name="banknote" /></span>
             <h3>Harga tetap</h3>
             <p>{settings.priceLabel}, tanpa biaya tambahan atau biaya tersembunyi.</p>
           </div>
@@ -218,7 +219,7 @@ const faqJson = JSON.stringify(faqSchema);
           ))}
         </div>
         {settings.breakStart && settings.breakEnd && (
-          <p class="how-helper">☕ Jam istirahat: {settings.breakStart}–{settings.breakEnd}</p>
+          <p class="how-helper"><Icon name="coffee" size={16} class="ico-inline" /> Jam istirahat: {settings.breakStart}–{settings.breakEnd}</p>
         )}
       </div>
     </section>
@@ -245,10 +246,10 @@ const faqJson = JSON.stringify(faqSchema);
           </div>
           <p class="addr">{site.address}</p>
           <a class="btn btn-wa" href={waUrl} target="_blank" rel="noopener noreferrer">
-            💬 Chat {site.barberName} via WhatsApp
+            <Icon name="message" size={18} /> Chat {site.barberName} via WhatsApp
           </a>
           <a class="btn btn-outline" href={mapsUrl} target="_blank" rel="noopener noreferrer">
-            📍 Buka di Google Maps
+            <Icon name="map-pin" size={18} /> Buka di Google Maps
           </a>
           <div>
             <p style="font-weight: 600; margin-bottom: 0.4rem;">Area Layanan</p>
