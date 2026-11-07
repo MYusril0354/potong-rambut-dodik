@@ -8,5 +8,5 @@ export default defineConfig({
   site: 'https://pangkas-dodik.example',
   output: 'server',
   integrations: [react()],
-  adapter: cloudflare(),
+  adapter: cloudflare({ prerenderEnvironment: 'node' }),
 });
