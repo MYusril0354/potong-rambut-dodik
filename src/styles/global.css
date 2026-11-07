@@ -308,6 +308,10 @@ h3 { font-size: 1.2rem; font-weight: 600; }
 /* ---------- Scissors (serving) — animasi SMIL ada di dalam SVG ---------- */
 .scissors-anim { width: 24px; height: 24px; margin-bottom: 0.1rem; }
 
+/* ---------- Scroll reveal (fade-in setiap section landing) ---------- */
+.js #landing .section { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.js #landing .section.visible { opacity: 1; transform: none; }
+
 /* ---------- View transitions (SPA-like) ---------- */
 @view-transition { navigation: none; }
 ::view-transition-old(root), ::view-transition-new(root) {
@@ -350,6 +354,7 @@ h3 { font-size: 1.2rem; font-weight: 600; }
 /* ---------- Reduced motion ---------- */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js #landing .section { opacity: 1 !important; transform: none !important; }
   html { scroll-behavior: auto; }
   ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
 }

@@ -283,4 +283,24 @@ const faqJson = JSON.stringify(faqSchema);
   </main>
 
   <Footer />
+
+  <script>
+    const revealSections = document.querySelectorAll('#landing .section');
+    if (revealSections.length && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: '0px 0px -8% 0px' }
+      );
+      revealSections.forEach((s) => io.observe(s));
+    } else {
+      revealSections.forEach((s) => s.classList.add('visible'));
+    }
+  </script>
 </BaseLayout>
