@@ -71,6 +71,10 @@ export function createRepo(storage: Storage): Repo {
       if (!Number.isInteger(number) || number < 1 || number > totalNumbers) {
         return { ok: false, error: 'Nomor antrian tidak valid (1–' + totalNumbers + ').' };
       }
+      const st = await stateOf(date);
+      if (st.currently_serving > 0 && number < st.currently_serving) {
+        return { ok: false, error: 'Nomor ini sudah lewat. Silakan pilih nomor berikutnya.' };
+      }
       const nameClean = name.trim();
       const phone = phoneRaw.replace(/\D/g, '');
       if (!nameClean) return { ok: false, error: 'Nama tidak boleh kosong.' };

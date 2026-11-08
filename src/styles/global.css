@@ -211,6 +211,16 @@ h3 { font-size: 1.2rem; font-weight: 600; }
 .num-btn.done { background: var(--success-soft); border-color: var(--success); color: var(--success); }
 .num-btn.skipped { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
 .num-btn.cancelled { background: var(--surface); border-style: dashed; color: var(--muted); }
+.num-btn.passed { background: #f1f0ee; color: #b5b0a8; border-color: #e2ddd6; }
+.num-legend { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center; margin-top: 0.85rem; font-size: 0.74rem; color: var(--muted); line-height: 1.5; }
+.num-legend span { display: inline-flex; align-items: center; gap: 0.3rem; }
+.num-legend .dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; border: 1px solid var(--border); flex-shrink: 0; }
+.num-legend .dot.available { background: var(--surface); }
+.num-legend .dot.serving { background: var(--accent); border-color: #b8955a; }
+.num-legend .dot.booked { background: #efe9df; border-color: #e5dfd6; }
+.num-legend .dot.done { background: var(--success-soft); border-color: var(--success); }
+.num-legend .dot.skipped { background: var(--danger-soft); border-color: var(--danger); }
+.num-legend .dot.passed { background: #f1f0ee; }
 
 /* ---------- Wizard ---------- */
 .wizard { max-width: 560px; margin-inline: auto; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); }
