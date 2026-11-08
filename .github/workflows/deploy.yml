@@ -34,6 +34,8 @@ jobs:
 
       - name: Build Astro
         run: npm run build
+        env:
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.PUBLIC_TURNSTILE_SITE_KEY }}
 
       - name: Terapkan migrasi D1
         if: github.ref == 'refs/heads/main'
