@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import BookingWizard from '../components/react/BookingWizard';
 import site from '../data/site.json';
 export const prerender = true;
-const turnstileSiteKey = (import.meta as any).env?.PUBLIC_TURNSTILE_SITE_KEY as string | undefined;
+const turnstileSiteKey = ((import.meta as any).env?.PUBLIC_TURNSTILE_SITE_KEY as string | undefined) || '1x00000000000000000000AA'; // Cloudflare test site key ("always passes") bila belum di-set
 ---
 
 <BaseLayout

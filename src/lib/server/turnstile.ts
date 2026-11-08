@@ -1,11 +1,15 @@
 // Cloudflare Turnstile — verifikasi token di sisi server.
-// Jika TURNSTILE_SECRET_KEY tidak di-set (dev), verifikasi dilewati (captcha nonaktif).
+// Default memakai TEST KEY Cloudflare ("always passes") bila TURNSTILE_SECRET_KEY tidak di-set,
+// supaya captcha aktif sejak awal tanpa konfigurasi. Untuk produksi WAJIB set
+// TURNSTILE_SECRET_KEY dengan secret asli (test key TIDAK memblokir bot sungguhan).
 
 const SITEVERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
 
+// Cloudflare test secret: "always passes" (cocok untuk dev/demo).
+const DEFAULT_SECRET_KEY = '1x0000000000000000000000000000000AA';
+
 export async function verifyTurnstile(env: any, token: string): Promise<boolean> {
-  const secret = env?.TURNSTILE_SECRET_KEY as string | undefined;
-  if (!secret) return true; // not configured → captcha disabled
+  const secret = (env?.TURNSTILE_SECRET_KEY as string | undefined) || DEFAULT_SECRET_KEY;
   if (!token) return false;
   try {
     const form = new FormData();
