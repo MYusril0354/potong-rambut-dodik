@@ -289,7 +289,7 @@ export default function AdminPanel() {
                 Klik 💬 untuk follow-up via WhatsApp. Setelah di-FU, tombol berubah jadi ✓ + jam.
               </p>
               {list.length === 0 ? (
-                <p style={{ color: 'var(--muted)' }}>Belum ada booking hari ini.</p>
+                <p className="empty-state">Belum ada booking hari ini.</p>
               ) : (
                 <div className="admin-list">
                   {list.map((b) => {

@@ -8,7 +8,7 @@ interface Props {
 
 export default function QueueTicket({ number, remaining, closed }: Props) {
   return (
-    <div className="queue-ticket">
+    <div className="queue-ticket" role="status" aria-live="polite">
       <div className="ticket-stub" aria-hidden="true" />
       <div className="ticket-body">
         {closed ? (
