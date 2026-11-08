@@ -1,12 +1,18 @@
 import type { APIRoute } from 'astro';
 import { getRepo } from '../../lib/server/db';
-import { getEnv, json, reqDate } from '../../lib/server/http';
+import { getClientIp, getEnv, json, reqDate } from '../../lib/server/http';
 import { verifyTurnstile } from '../../lib/server/turnstile';
+import { isRateLimited } from '../../lib/server/ratelimit';
 import { computeSlotTimes, getSettings, isClosedToday } from '../../lib/server/settings';
 
 export const POST: APIRoute = async (ctx) => {
   const body = await ctx.request.json().catch(() => ({}));
   const env = getEnv(ctx);
+
+  if (isRateLimited('book:' + getClientIp(ctx), 10, 60000)) {
+    return json({ ok: false, error: 'Terlalu banyak percobaan. Silakan coba lagi dalam 1 menit.' }, 429);
+  }
+
   const settings = await getSettings(env);
   const closed = isClosedToday(settings);
   if (closed) return json({ ok: false, error: 'Hari ini tutup. Booking tidak tersedia.' }, 423);

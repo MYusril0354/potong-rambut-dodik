@@ -6,7 +6,7 @@ import { CONFIG, slotTime } from '../util';
 // ---------- low-level storage interface ----------
 export interface Storage {
   getBookings(date: string): Promise<Booking[]>;
-  insertBooking(b: Booking): Promise<void>;
+  insertBooking(b: Booking): Promise<boolean>;
   updateBooking(id: string, patch: Partial<Booking>): Promise<void>;
   getState(date: string): Promise<QueueState | null>;
   setState(date: string, currently_serving: number): Promise<void>;
@@ -96,7 +96,8 @@ export function createRepo(storage: Storage): Repo {
         created_at: now,
         updated_at: now,
       };
-      await storage.insertBooking(b);
+      const inserted = await storage.insertBooking(b);
+      if (!inserted) return { ok: false, error: 'Nomor antrian sudah diambil.' };
       return { ok: true, booking: b };
     },
 
@@ -203,8 +204,10 @@ export const memoryStorage: Storage = {
   },
   async insertBooking(b) {
     const arr = memBookings.get(b.date) || [];
+    if (arr.some((x) => x.number === b.number && x.status !== 'cancelled')) return false;
     arr.push({ ...b });
     memBookings.set(b.date, arr);
+    return true;
   },
   async updateBooking(id, patch) {
     for (const [date, arr] of memBookings) {
@@ -245,12 +248,13 @@ export function d1Storage(db: any): Storage {
       return (res.results || []).map(rowToBooking);
     },
     async insertBooking(b) {
-      await db
+      const res = await db
         .prepare(
-          'INSERT INTO bookings (id, date, number, slot_time, customer_name, customer_phone, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
+          'INSERT INTO bookings (id, date, number, slot_time, customer_name, customer_phone, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT(date, number) DO NOTHING'
         )
         .bind(b.id, b.date, b.number, b.slot_time, b.customer_name, b.customer_phone, b.status, b.created_at, b.updated_at)
         .run();
+      return (res?.meta?.changes ?? 0) > 0;
     },
     async updateBooking(id, patch) {
       const fields: string[] = [];
